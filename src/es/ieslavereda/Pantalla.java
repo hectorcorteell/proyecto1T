@@ -14,4 +14,24 @@ public class Pantalla {
         System.out.println(colorize("¡ERROR!", Attribute.TEXT_COLOR(255,0,0)));
         System.out.println(mensajeError);
     }
+
+    public static void mostrarTablero(char[][] tableroJugador, char[][] tableroPC){
+        for (int fil = 0; fil < tableroJugador.length; fil++) {
+
+            for (int col = 0; col < tableroJugador[fil].length; col++)
+                System.out.print(tableroJugador[fil][col]+" ");
+
+            System.out.print("       ");
+
+            for (int col = 0; col < 10; col++)
+                System.out.print(tableroPC[col][col]+" ");
+
+            System.out.println();
+
+
+        }
+
+
+    }
+
 }
