@@ -75,4 +75,5 @@ public class Entrada {
     public static int obtenerColumna(){
         return obtenerEnteroBetween(0,9,"Introduce un número [0-9]");
     }
+
 }

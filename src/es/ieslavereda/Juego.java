@@ -6,6 +6,10 @@ public class Juego {
         //System.out.println(Entrada.obtenerFila());
         //System.out.println(Entrada.obtenerColumna());
 
+        Pantalla.mostrarMenu();
+        String nombre = Entrada.obtenerTexto("Nombre:");
+        borrarPantalla();
+
         char[][] tableroJugador = new char[10][10];
         char[][] tableroPC = new char[10][10];
 
