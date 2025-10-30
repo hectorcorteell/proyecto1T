@@ -17,15 +17,15 @@ public class Pantalla {
 
     public static void mostrarTablero(char[][] tableroJugador, char[][] tableroPC) {
         for (int fil = 0; fil < tableroJugador.length; fil++) {
-
+            System.out.print((char)('A'+fil) + " ");
             for (int col = 0; col < tableroJugador[fil].length; col++)
                 System.out.print(tableroJugador[fil][col] + " ");
 
-            System.out.print("       ");
+            System.out.print((char)('A'+fil)+" "+"         "+(char)('A'+fil)+" ");
 
             for (int col = 0; col < 10; col++)
                 System.out.print(tableroPC[col][col] + " ");
-
+            System.out.print((char)('A'+fil) + " ");
             System.out.println();
 
 
