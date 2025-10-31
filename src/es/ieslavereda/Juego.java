@@ -8,15 +8,31 @@ public class Juego {
 
         Pantalla.mostrarMenu();
         String nombre = Entrada.obtenerTexto("Nombre:");
+
         borrarPantalla();
 
+        //arrays
         char[][] tableroJugador = new char[10][10];
         char[][] tableroPC = new char[10][10];
+        int[] numeros = new int[10];
+        int[] barcos = new int[4];
 
+        //coordenadas
+        int fila;
+        int columna;
+
+        rellenarNums(numeros);
         inicializarTablero(tableroJugador);
         inicializarTablero(tableroPC);
 
+        Pantalla.mostrarNumerosTablero(numeros);
+        System.out.println();
         Pantalla.mostrarTablero(tableroJugador,tableroPC);
+        Pantalla.mostrarNumerosTablero(numeros);
+        System.out.println();
+
+        colocarBarcosJugador(tableroJugador, barcos);
+
     }
 
     // Métodos a implementar
@@ -54,6 +70,12 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
  0 1 2 3 4 5 6 7 8 9	*/
 
+    public static void rellenarNums(int[] numeros){
+        for(int i=0;i<numeros.length;i++){
+            numeros[i]=i;
+        }
+    }
+
     public static void inicializarTablero(char[][] tablero){
 
         for (int col = 0; col < 10; col++)
@@ -87,7 +109,20 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 //Este metodo coloca los barcos pasados como vector dentro del tablero del Jugador
 
-    public static void colocarBarcosJugador(char[][] tablero, int[] barcos){}
+    public static void colocarBarcosJugador(char[][] tableroJugador, int[] barcos){
+        String coordenada;
+        int contador=0;
+
+        int fila;
+        int columna;
+
+        do{
+            coordenada = Entrada.obtenerTexto("Vamos a colocar el barco de " + (barcos.length - contador) + " celdas");
+            contador++;
+            fila=Entrada.obtenerFila();
+            columna=Entrada.obtenerColumna();
+        }while(contador<=4);
+    }
 
 
 //Este metodo coloca los barcos pasados como vector dentro del tablero del PC

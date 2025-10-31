@@ -16,6 +16,7 @@ public class Pantalla {
     }
 
     public static void mostrarTablero(char[][] tableroJugador, char[][] tableroPC) {
+
         for (int fil = 0; fil < tableroJugador.length; fil++) {
             System.out.print((char)('A'+fil) + " ");
             for (int col = 0; col < tableroJugador[fil].length; col++)
@@ -34,6 +35,19 @@ public class Pantalla {
 
     }
 
+    public static void mostrarNumerosTablero(int[] numeros){
+        System.out.print(" ");
+        for(int i=0;i<numeros.length;i++){
+            System.out.print(" " + numeros[i]);
+        }
+        System.out.print(" "+"           ");
+
+        System.out.print(" ");
+        for(int i=0;i<numeros.length;i++){
+            System.out.print(" " + numeros[i]);
+        }
+    }
+
     public static void mostrarMenu(){
         System.out.println(
                 "====================== \n" +
@@ -41,5 +55,6 @@ public class Pantalla {
                 " V1.0 Héctor Cortell\n" +
                 "======================");
     }
+
 
 }
