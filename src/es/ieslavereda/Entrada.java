@@ -1,6 +1,10 @@
 package es.ieslavereda;
 
+import com.diogonunes.jcolor.Attribute;
+
 import java.util.Scanner;
+
+import static com.diogonunes.jcolor.Ansi.colorize;
 
 public class Entrada {
 
@@ -18,7 +22,7 @@ public class Entrada {
         Pantalla.mostrarMensaje(texto);
         do{
             if(!sc.hasNextInt()) {
-                Pantalla.mostrarError("¡Debes introducir un entero!");
+                Pantalla.mostrarError("¡Debes introducir un número entre 0-1!");
                 sc.nextLine();
                 Pantalla.mostrarMensaje(texto);
             }
@@ -34,9 +38,9 @@ public class Entrada {
         do {
             numero = obtenerEntero(texto);
             if (numero < min)
-                Pantalla.mostrarError("El número debe ser mayor o igual que " + min+".");
+                Pantalla.mostrarError("El número debe ser entre 0-1");
             if (numero > max)
-                Pantalla.mostrarError("El número debe ser menor o igual que " + max+".");
+                Pantalla.mostrarError("El número debe ser entre 0-1");
         }while (numero<min || numero>max);
 
         return numero;
@@ -66,6 +70,35 @@ public class Entrada {
         }while(letra < minChar || letra > maxChar);
 
         return letra;
+    }
+
+    public static boolean validarCoordenada(char minChar, char maxChar, char fila, char columna, String coordenada){
+
+        if(coordenada.length() != 2){
+            Pantalla.mostrarError("La coordenada debe comprenderse de una letra y un número");
+            return false;
+        } else if(coordenada.length() < 2){
+            Pantalla.mostrarError("La coordenada debe comprenderse de una letra y un número");
+            return false;
+        }
+
+        if (fila < minChar || fila > maxChar){
+            Pantalla.mostrarError("Debes introducir una letra MAYÚSCULA entre " + minChar + " y " + maxChar);
+            return false;
+        }
+
+        if (columna < '0'){
+            Pantalla.mostrarError("El número debe ser mayor o igual que 0.");
+            return false;
+        }
+        else if (columna > '9'){
+            Pantalla.mostrarError("El número debe ser menor o igual que 9.");
+            return false;
+        } else {
+            System.out.println(colorize("Coordenada válida", Attribute.TEXT_COLOR(0, 255, 0)));
+            return true;
+        }
+
     }
 
     public static int obtenerFila(){
