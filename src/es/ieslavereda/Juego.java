@@ -1,5 +1,7 @@
 package es.ieslavereda;
 
+import java.sql.SQLOutput;
+
 public class Juego {
     public static void main(String[] args) {
 
@@ -28,7 +30,7 @@ public class Juego {
         Pantalla.mostrarTableros(numeros,tableroJugador,tableroPC);
 
         colocarBarcosJugador(tableroJugador, barcos, numeros, tableroPC);
-
+        colocarBarcosPC(tableroJugador, barcos, numeros, tableroPC);
     }
 
     // Métodos a implementar
@@ -108,56 +110,85 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
     public static void colocarBarcosJugador(char[][] tableroJugador, int[] barcos, int[] numeros, char[][] tableroPC){
         String coordenada;
         int orientacion;
-        int contador=0;
         boolean validado=false;
-        int longitud = barcos.length - contador;
+        int longitudBarco = 4;
 
         char fila;
         char columna;
         int filaInt;
         int columnaInt;
-        boolean cabe=false;
+        boolean cabe;
+        boolean colision=false;
+        boolean doubleBarco3=false;
 
         do{
             System.out.println();
-            coordenada = Entrada.obtenerTexto("Vamos a colocar el barco de " + (barcos.length - contador) + " celdas [A-J][0-9] ");
+            coordenada = Entrada.obtenerTexto("Vamos a colocar el barco de " + (longitudBarco) + " celdas [A-J][0-9] ");
+
             if(coordenada.length() < 2){
                 Pantalla.mostrarError("La coordenada debe comprenderse de dos caracteres [LETRA][número]");
+
             }else{
                 fila=coordenada.charAt(0);
                 columna=coordenada.charAt(1);
                 validado=Entrada.validarCoordenada('A','J',fila, columna, coordenada);
+
                 if (validado) {
-                    contador++;
                     orientacion = Entrada.obtenerEnteroBetween(0,1,"Orientación [0-Horizontal  |  1-Vertical]");
                     System.out.println("________________________________");
                     filaInt=convertirFilaInt(fila);
                     columnaInt=convertirColumnaInt(columna);
-                    cabe = cabeBarco(tableroJugador, longitud, fila, columna, orientacion);
-                    if (cabe && orientacion==0){
-                        for (int i=0;i<longitud;i++){
+                    cabe = cabeBarco(tableroJugador, longitudBarco, filaInt, columnaInt, orientacion);
+
+                    if(cabe)
+                        colision = hayColision(tableroJugador,longitudBarco, filaInt, columnaInt, orientacion);
+
+                    if (cabe && orientacion==0 && !colision){
+
+                        for (int i=0;i<longitudBarco;i++){
                             tableroJugador[filaInt][columnaInt+i]= 'B';
                         }
-                        longitud = barcos.length - contador;
+
                         Pantalla.mostrarTableros(numeros,tableroJugador,tableroPC);
                         borrarPantalla();
                         cabe=false;
-                    }else if (cabe && orientacion==1){
-                        cabe=false;
-                        for (int i=0;i<longitud;i++){
+
+                        //Repetir el barco de 3 celdas
+                        if (longitudBarco==3 && !doubleBarco3){
+                            doubleBarco3 = true;
+                        }else if (longitudBarco<=3 && doubleBarco3){
+                            longitudBarco--;
+                        }else if (longitudBarco==4){
+                            longitudBarco--;
+                        }
+
+                    }else if (cabe && orientacion==1 && !colision){
+
+                        for (int i=0;i<longitudBarco;i++){
                             tableroJugador[filaInt+i][columnaInt]= 'B';
                         }
-                        longitud = barcos.length - contador;
+
                         Pantalla.mostrarTableros(numeros,tableroJugador,tableroPC);
                         borrarPantalla();
                         cabe=false;
+
+                        //Repetir el barco de 3 celdas
+                        if (longitudBarco==3 && !doubleBarco3){
+                            doubleBarco3 = true;
+                        }else if (longitudBarco<=3 && doubleBarco3){
+                            longitudBarco--;
+                        }else if (longitudBarco==4){
+                            longitudBarco--;
+                        }
+
                     }
+
                 }
             }
-        }while(contador<=4);
+        }while(longitudBarco>0);
     }
 
-    //Este metodo devuelve la fila en int
+    //Este metodo devuelve la fila/columna en int
 
     public static int convertirFilaInt(char fila){
         switch (fila){
@@ -192,14 +223,29 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
         }
     }
 
-//Este metodo coloca los barcos pasados como vector dentro del tablero del PC
-
-    public static void colocarBarcosPC(char[][] tablero,int[] barcos){}
-
 
 //Este metodo comprueba si hay algun barco en la zona del barco a colocar
 
-    public static boolean hayColision(char[][] tablero, int longitudBarco, int fila, int columna, int orientacion){
+    public static boolean hayColision(char[][] tablero, int longitudBarco, int filaInt, int columnaInt, int orientacion){
+
+        if (orientacion == 0) {
+            for (int i=0;i<=longitudBarco;i++){
+                if (tablero[filaInt][columnaInt+i]=='B'){
+                    Pantalla.mostrarError("El barco colisiona con otro");
+                    return true;
+                }
+            }
+        }
+
+        if (orientacion == 1) {
+            for (int i=0;i<=longitudBarco;i++){
+                if (tablero[filaInt+i][columnaInt]=='B'){
+                    Pantalla.mostrarError("El barco colisiona con otro");
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -208,13 +254,13 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
     public static boolean cabeBarco(char[][] tablero, int longitudBarco, int filaInt, int columnaInt, int orientacion){
         if (orientacion == 0) {
-            if (longitudBarco<10-columnaInt){
+            if (tablero.length-longitudBarco<columnaInt){
                 Pantalla.mostrarError("El barco NO cabe");
                 return false;
             }
         }
         if (orientacion == 1) {
-            if (longitudBarco<tablero.length-filaInt){
+            if (tablero.length-longitudBarco<filaInt){
                 Pantalla.mostrarError("El barco NO cabe");
                 return false;
             }
@@ -223,8 +269,81 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
         return true;
     }
 
-//Este metodo coloca un barco en una posicion si este cabe en tablero y no coincide ninguna posicion con otro barco en la zona
 
-    //public static boolean colocarBarco(char[][] tablero, int longitudBarco, int fila, int columna, int orientacion,boolean jugador){}
+    //Este metodo coloca los barcos pasados como vector dentro del tablero del PC
+    public static void colocarBarcosPC(char[][] tableroJugador, int[] barcos, int[] numeros, char[][] tableroPC) {
+        String coordenada;
+        int orientacion;
+        boolean validado = true;
+        int longitudBarco = 4;
 
+        boolean cabe;
+        boolean colision = false;
+        boolean doubleBarco3 = false;
+
+        do {
+            System.out.println();
+
+            int filaInt = (int) ((Math.random() * 1000) / 100f);
+            int columnaInt = (int) ((Math.random() * 1000) / 100f);
+            int random = (int) ((Math.random() * 1000) / 100f);
+
+            System.out.println(filaInt + " " + columnaInt);
+
+            if (random < 5)
+                orientacion = 0;
+            else
+                orientacion = 1;
+
+            if (validado) {
+                System.out.println("________________________________");
+                cabe = cabeBarco(tableroPC, longitudBarco, filaInt, columnaInt, orientacion);
+
+                if (cabe)
+                    colision = hayColision(tableroPC, longitudBarco, filaInt, columnaInt, orientacion);
+
+                if (cabe && orientacion == 0 && !colision) {
+
+                    for (int i = 0; i < longitudBarco; i++) {
+                        tableroPC[filaInt][columnaInt + i] = 'B';
+                    }
+
+                    Pantalla.mostrarTableros(numeros, tableroJugador, tableroPC);
+                    borrarPantalla();
+                    cabe = false;
+
+                    //Repetir el barco de 3 celdas
+                    if (longitudBarco == 3 && !doubleBarco3) {
+                        doubleBarco3 = true;
+                    } else if (longitudBarco <= 3 && doubleBarco3) {
+                        longitudBarco--;
+                    } else if (longitudBarco == 4) {
+                        longitudBarco--;
+                    }
+
+                } else if (cabe && orientacion == 1 && !colision) {
+
+                    for (int i = 0; i < longitudBarco; i++) {
+                        tableroPC[filaInt + i][columnaInt] = 'B';
+                    }
+
+                    Pantalla.mostrarTableros(numeros, tableroJugador, tableroPC);
+                    borrarPantalla();
+                    cabe = false;
+
+                    //Repetir el barco de 3 celdas
+                    if (longitudBarco == 3 && !doubleBarco3) {
+                        doubleBarco3 = true;
+                    } else if (longitudBarco <= 3 && doubleBarco3) {
+                        longitudBarco--;
+                    } else if (longitudBarco == 4) {
+                        longitudBarco--;
+                    }
+
+                }
+
+            }
+
+        } while (longitudBarco > 0);
+    }
 }

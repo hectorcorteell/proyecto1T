@@ -25,7 +25,7 @@ public class Pantalla {
             System.out.print((char)('A'+fil)+" "+"         "+(char)('A'+fil)+" ");
 
             for (int col = 0; col < 10; col++)
-                System.out.print(tableroPC[col][col] + " ");
+                System.out.print(tableroPC[fil][col] + " ");
             System.out.print((char)('A'+fil) + " ");
             System.out.println();
 
