@@ -148,9 +148,9 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
                         for (int i=0;i<longitudBarco;i++){
                             tableroJugador[filaInt][columnaInt+i]= 'B';
                         }
-
-                        Pantalla.mostrarTableros(numeros,tableroJugador,tableroPC);
                         borrarPantalla();
+                        Pantalla.mostrarTableros(numeros,tableroJugador,tableroPC);
+
                         cabe=false;
 
                         //Repetir el barco de 3 celdas
@@ -167,9 +167,9 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
                         for (int i=0;i<longitudBarco;i++){
                             tableroJugador[filaInt+i][columnaInt]= 'B';
                         }
-
-                        Pantalla.mostrarTableros(numeros,tableroJugador,tableroPC);
                         borrarPantalla();
+                        Pantalla.mostrarTableros(numeros,tableroJugador,tableroPC);
+
                         cabe=false;
 
                         //Repetir el barco de 3 celdas
@@ -254,13 +254,13 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
     public static boolean cabeBarco(char[][] tablero, int longitudBarco, int filaInt, int columnaInt, int orientacion){
         if (orientacion == 0) {
-            if (tablero.length-longitudBarco<columnaInt){
+            if ((tablero.length-1)-longitudBarco<=columnaInt){
                 Pantalla.mostrarError("El barco NO cabe");
                 return false;
             }
         }
         if (orientacion == 1) {
-            if (tablero.length-longitudBarco<filaInt){
+            if ((tablero.length-1)-longitudBarco<=filaInt){
                 Pantalla.mostrarError("El barco NO cabe");
                 return false;
             }
@@ -284,11 +284,9 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
         do {
             System.out.println();
 
-            int filaInt = (int) ((Math.random() * 1000) / 100f);
-            int columnaInt = (int) ((Math.random() * 1000) / 100f);
-            int random = (int) ((Math.random() * 1000) / 100f);
-
-            System.out.println(filaInt + " " + columnaInt);
+            int filaInt = (int)((Math.random() * 1000) / 100f);
+            int columnaInt = (int)((Math.random() * 1000) / 100f);
+            int random = (int)((Math.random() * 1000) / 100f);
 
             if (random < 5)
                 orientacion = 0;
@@ -296,7 +294,6 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
                 orientacion = 1;
 
             if (validado) {
-                System.out.println("________________________________");
                 cabe = cabeBarco(tableroPC, longitudBarco, filaInt, columnaInt, orientacion);
 
                 if (cabe)
@@ -308,8 +305,6 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
                         tableroPC[filaInt][columnaInt + i] = 'B';
                     }
 
-                    Pantalla.mostrarTableros(numeros, tableroJugador, tableroPC);
-                    borrarPantalla();
                     cabe = false;
 
                     //Repetir el barco de 3 celdas
@@ -327,8 +322,6 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
                         tableroPC[filaInt + i][columnaInt] = 'B';
                     }
 
-                    Pantalla.mostrarTableros(numeros, tableroJugador, tableroPC);
-                    borrarPantalla();
                     cabe = false;
 
                     //Repetir el barco de 3 celdas
@@ -345,5 +338,8 @@ J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
             }
 
         } while (longitudBarco > 0);
+        borrarPantalla();
+        Pantalla.mostrarTableros(numeros, tableroJugador, tableroPC);
     }
+
 }
